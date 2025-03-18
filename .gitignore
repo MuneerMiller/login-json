@@ -1,0 +1,15 @@
+# Ignore the data.json file (contains sensitive data)
+data.json
+
+# Ignore the node_modules directory (dependencies are installed via npm)
+node_modules/
+
+# Ignore environment variables (if you use them later)
+.env
+
+# Ignore log files (if any)
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
