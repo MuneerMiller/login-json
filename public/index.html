@@ -11,27 +11,29 @@
         <!-- Registration Form -->
         <form id="registerForm" class="form">
             <h1>Register</h1>
+            <p>Create a new account to get started.</p>
             <label for="regUsername">Username:</label>
-            <input type="text" id="regUsername" name="regUsername" required><br><br>
+            <input type="text" id="regUsername" name="regUsername" placeholder="Enter your username" required>
             
             <label for="regPassword">Password:</label>
-            <input type="password" id="regPassword" name="regPassword" required><br><br>
+            <input type="password" id="regPassword" name="regPassword" placeholder="Enter your password" required>
             
             <button type="submit">Register</button>
-            <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            <p class="switch-form">Already have an account? <a href="#" id="showLogin">Login here</a></p>
         </form>
 
         <!-- Login Form -->
         <form id="loginForm" class="form hidden">
             <h1>Login</h1>
+            <p>Welcome back! Please log in to continue.</p>
             <label for="loginUsername">Username:</label>
-            <input type="text" id="loginUsername" name="loginUsername" required><br><br>
+            <input type="text" id="loginUsername" name="loginUsername" placeholder="Enter your username" required>
             
             <label for="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" name="loginPassword" required><br><br>
+            <input type="password" id="loginPassword" name="loginPassword" placeholder="Enter your password" required>
             
             <button type="submit">Login</button>
-            <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+            <p class="switch-form">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
         </form>
     </div>
 
