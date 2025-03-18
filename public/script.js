@@ -1,23 +1,33 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
+// Toggle between registration and login forms
+document.getElementById('showLogin').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+});
 
-    // Get the form data
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+document.getElementById('showRegister').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.remove('hidden');
+});
 
-    // Front-end validation
+// Handle registration form submission
+document.getElementById('registerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+
     if (!username || !password) {
         alert('Please fill in both username and password fields.');
-        return; // Stop further execution
+        return;
     }
 
-    // Create an object with the form data
     const data = {
         username: username,
         password: password
     };
 
-    // Send the data to the server using fetch
     fetch('/save-data', {
         method: 'POST',
         headers: {
@@ -33,10 +43,53 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     })
     .then(result => {
         console.log('Success:', result);
-        alert('Data saved successfully!');
+        alert('Registration successful! Please log in.');
+        document.getElementById('registerForm').classList.add('hidden');
+        document.getElementById('loginForm').classList.remove('hidden');
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error saving data. Please try again.');
+        alert('Error during registration. Please try again.');
+    });
+});
+
+// Handle login form submission
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!username || !password) {
+        alert('Please fill in both username and password fields.');
+        return;
+    }
+
+    const data = {
+        username: username,
+        password: password
+    };
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log('Success:', result);
+        // Redirect to the dashboard page
+        window.location.href = '/dashboard.html';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Invalid username or password. Please try again.');
     });
 });

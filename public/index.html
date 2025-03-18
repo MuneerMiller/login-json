@@ -3,22 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login and Registration</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form id="loginForm">
-        <h1>Login</h1>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="submit">Login</button>
-    </form>
+    <div class="container">
+        <!-- Registration Form -->
+        <form id="registerForm" class="form">
+            <h1>Register</h1>
+            <label for="regUsername">Username:</label>
+            <input type="text" id="regUsername" name="regUsername" required><br><br>
+            
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" name="regPassword" required><br><br>
+            
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        </form>
 
-    <!-- Link to the external JavaScript file -->
+        <!-- Login Form -->
+        <form id="loginForm" class="form hidden">
+            <h1>Login</h1>
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername" name="loginUsername" required><br><br>
+            
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="loginPassword" required><br><br>
+            
+            <button type="submit">Login</button>
+            <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+        </form>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
