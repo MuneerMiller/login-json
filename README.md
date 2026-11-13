@@ -5,7 +5,7 @@ A small full-stack app where people can create an account, log in and reach a da
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
-![Tests](https://img.shields.io/badge/tests-node%3Atest-2E7D32)
+[![Tests](https://github.com/MuneerMiller/login-json/actions/workflows/tests.yml/badge.svg)](https://github.com/MuneerMiller/login-json/actions/workflows/tests.yml)
 
 | Login with a clear error | Protected dashboard |
 | --- | --- |
@@ -32,7 +32,7 @@ This is a learning project, but it follows the basics properly:
 
 ## Getting started
 
-You need [Node.js](https://nodejs.org/) 18 or newer.
+You need [Node.js](https://nodejs.org/) 20 or newer.
 
 ```bash
 git clone https://github.com/MuneerMiller/login-json.git
@@ -60,7 +60,7 @@ To use a different port, set `PORT`, for example `PORT=8080 npm start`.
 npm test
 ```
 
-The tests use Node's built-in test runner. They start the server on a free port with a temporary data file, and cover registration, duplicate usernames, wrong passwords, the protected dashboard and logging out.
+The tests use Node's built-in test runner. They start the server on a free port with a temporary data file, and cover registration, duplicate usernames, wrong passwords, the protected dashboard and logging out. GitHub Actions runs them on Node.js 20 and 22 for every push and pull request.
 
 ## API
 
