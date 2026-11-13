@@ -1,163 +1,104 @@
-# Login and Registration Application
+# Login and Registration with Node.js
 
-This is a simple web application that allows users to register, log in, and view a dashboard. The application is built using **HTML**, **CSS**, **JavaScript** for the front-end, and **Node.js** with **Express** for the back-end. Passwords are securely hashed using **bcrypt**.
+A small full-stack app where people can create an account, log in and reach a dashboard that only signed-in users can see. The front end is plain HTML, CSS and JavaScript; the back end is **Node.js** with **Express**, passwords are hashed with **bcrypt**, and accounts are kept in a JSON file.
 
----
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Tests](https://img.shields.io/badge/tests-node%3Atest-2E7D32)
+
+| Login with a clear error | Protected dashboard |
+| --- | --- |
+| ![Login form showing "Invalid username or password"](docs/login-error.png) | ![Dashboard greeting the logged-in user](docs/dashboard.png) |
 
 ## Features
 
-1. **User Registration:**
-   - Users can register by providing a username and password.
-   - Passwords are securely hashed using bcrypt before being stored.
+- **Register** with a username and password. Usernames must be unique (ignoring case) and passwords need at least 8 characters.
+- **Log in** to get a session cookie, then land on a dashboard that greets you by name.
+- **Protected dashboard.** `/dashboard` sends anyone who isn't logged in back to the login page, and the page isn't served as a public file.
+- **Log out** ends the session on the server, not just in the browser.
+- **Clear feedback.** Errors and successes show inside the form instead of pop-up alerts.
 
-2. **User Login:**
-   - Registered users can log in using their credentials.
-   - Passwords are verified against the hashed versions stored in the database.
+## How it keeps accounts safe
 
-3. **Dashboard:**
-   - After successful login, users are redirected to a dashboard page.
-   - The dashboard displays a success message and provides a **Log Out** button.
+This is a learning project, but it follows the basics properly:
 
-4. **User-Friendly UI:**
-   - Clean and intuitive forms for registration and login.
-   - Clear feedback for success and error states.
-   - Responsive design that works on all screen sizes.
+- **Passwords are hashed with bcrypt** (10 salt rounds) and never stored or logged in plain text.
+- **Only the username and hash are saved.** Any extra fields sent with a request are ignored, so nobody can sneak in something like `"isAdmin": true`.
+- **Login errors don't reveal which usernames exist.** A wrong password and an unknown user get the same message.
+- **Sessions use a random 256-bit token** in an `HttpOnly`, `SameSite=Strict` cookie, so page scripts can't read it and other sites can't send it. Sessions expire after an hour.
+- **Sign-ups are written one at a time**, so two people registering together can't overwrite each other.
+- **`data.json` is in `.gitignore`**, so account data never ends up in the repository.
 
----
+## Getting started
 
-## Technologies Used
-
-- **Front-End:**
-  - HTML
-  - CSS
-  - JavaScript
-
-- **Back-End:**
-  - Node.js
-  - Express
-  - bcrypt (for password hashing)
-
-- **Data Storage:**
-  - JSON file (`data.json`) to store user data.
-
----
-
-## Installation and Setup
-
-Follow these steps to set up and run the application locally:
-
-### 1. Clone the Repository
+You need [Node.js](https://nodejs.org/) 18 or newer.
 
 ```bash
-git clone https://github.com/your-username/login-json.git
-cd login-json
+git clone https://github.com/MuneerMiller/login-json.git
 ```
 
-### 2. Install Dependencies
-
-Make sure you have Node.js installed. Then, install the required dependencies:
+```bash
+cd login-json
+```
 
 ```bash
 npm install
 ```
 
-### 3. Start the Server
+```bash
+npm start
+```
 
-Run the following command to start the server:
+Then open <http://localhost:3000>. The first registration creates `data.json` next to `server.js`.
+
+To use a different port, set `PORT`, for example `PORT=8080 npm start`.
+
+## Running the tests
 
 ```bash
-node server.js
+npm test
 ```
 
-The server will start on http://localhost:3000
+The tests use Node's built-in test runner. They start the server on a free port with a temporary data file, and cover registration, duplicate usernames, wrong passwords, the protected dashboard and logging out.
 
-### 4. Access the Application:
+## API
 
-Open your browser and navigate to:
+| Method | Path | What it does |
+| --- | --- | --- |
+| `POST` | `/register` | Creates an account from `{ "username", "password" }`. Returns `201`, or `400` / `409` with a message |
+| `POST` | `/login` | Checks the password and sets the session cookie. Returns `200` or `401` |
+| `GET` | `/dashboard` | The dashboard page, or a redirect to `/` when logged out |
+| `GET` | `/api/me` | The logged-in user's name, or `401` |
+| `POST` | `/logout` | Ends the session |
 
-```
-http://localhost:3000
-```
-
----
-
-## Usage
-
-### Registration 
-
-1. On the homepage, fill in the Username and Password fields in the registration form.
-
-2. Click the Register button.
-
-3. If successful, you will be prompted to log in.
-
-### Login
-
-1. On the homepage, fill in the Username and Password fields in the login form.
-
-2. Click the Login button.
-
-3. If the credentials are correct, you will be redirected to the dashboard.
-
-### Dashboard
-
- - The dashboard displays a success message and a Log Out button.
-
- - Click the Log Out button to return to the login page.
-
----
-
-## File Structure
+## Project structure
 
 ```
 login-json/
 ├── public/
-│   ├── index.html          # Main HTML file for the login/registration forms
-│   ├── dashboard.html      # Dashboard page for logged-in users
-│   ├── styles.css          # CSS file for styling the application
-│   └── script.js           # JavaScript file for handling form submissions
-├── server.js               # Back-end server code
-├── data.json               # JSON file to store user data
-├── package.json            # Node.js project configuration
-└── README.md               # Project documentation
+│   ├── index.html      # Registration and login forms
+│   ├── script.js       # Form handling and messages
+│   └── styles.css      # Styling
+├── views/
+│   └── dashboard.html  # Only served to logged-in users
+├── test/
+│   └── server.test.js  # API tests
+├── docs/               # Screenshots for this README
+├── server.js           # Express server, sessions and validation
+└── package.json
 ```
 
----
+## What I'd add next
 
-## Contributing
-
-Contributions are welcome! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository.
-
-2. Create a new branch for your feature or bugfix.
-
-3. Commit your changes.
-
-4. Push your branch and submit a pull request.
-
----
+- Keep sessions in a store such as Redis, so they survive a server restart.
+- Move accounts from a JSON file to a database such as SQLite or PostgreSQL.
+- Rate-limit login attempts to slow down password guessing.
 
 ## Licence
 
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-## Acknowledgments
-
- - bcrypt: For securely hashing passwords.
-
- - Express: For simplifying the back-end server setup.
-
- - Flexbox: For creating a responsive and aligned layout.
-
----
+Copyright © 2026 Mogamat Muneer Miller. All rights reserved. The code is public so you can read it and learn from it, but it is not open source. See [LICENSE](LICENSE).
 
 ## Contact
 
-If you have any questions or feedback, feel free to reach out:
-
- - Email: muneermilleror@gmail.com
-
- - GitHub: https://github.com/MuneerMiller
+Built by **[Muneer Miller](https://github.com/MuneerMiller)** · [muneermiller.github.io](https://muneermiller.github.io/)

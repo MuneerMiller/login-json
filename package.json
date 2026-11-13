@@ -3,23 +3,26 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MuneerMiller/login-json.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Mogamat Muneer Miller",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/MuneerMiller/login-json/issues"
   },
   "homepage": "https://github.com/MuneerMiller/login-json#readme",
-  "description": "",
+  "description": "Register and log in with bcrypt-hashed passwords, a session cookie and a protected dashboard, using Node.js, Express and a JSON file.",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

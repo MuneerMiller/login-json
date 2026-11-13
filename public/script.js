@@ -1,95 +1,80 @@
-// Toggle between registration and login forms
-document.getElementById('showLogin').addEventListener('click', function(event) {
+const registerForm = document.getElementById('registerForm');
+const loginForm = document.getElementById('loginForm');
+
+// Toggle between the registration and login forms
+function showForm(formToShow, formToHide) {
+    formToHide.classList.add('hidden');
+    formToShow.classList.remove('hidden');
+    setMessage(formToShow, '');
+    formToShow.querySelector('input').focus();
+}
+
+document.getElementById('showLogin').addEventListener('click', (event) => {
     event.preventDefault();
-    document.getElementById('registerForm').classList.add('hidden');
-    document.getElementById('loginForm').classList.remove('hidden');
+    showForm(loginForm, registerForm);
 });
 
-document.getElementById('showRegister').addEventListener('click', function(event) {
+document.getElementById('showRegister').addEventListener('click', (event) => {
     event.preventDefault();
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('registerForm').classList.remove('hidden');
+    showForm(registerForm, loginForm);
 });
 
-// Handle registration form submission
-document.getElementById('registerForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+// Show a message inside a form, styled as an error or a success
+function setMessage(form, text, type = 'error') {
+    const message = form.querySelector('.message');
+    message.textContent = text;
+    message.className = `message ${text ? type : ''}`;
+}
 
-    const username = document.getElementById('regUsername').value.trim();
-    const password = document.getElementById('regPassword').value.trim();
+// Send the form's username and password as JSON and return the server's reply
+async function submitCredentials(url, form, usernameId, passwordId) {
+    const username = document.getElementById(usernameId).value.trim();
+    // Passwords are sent exactly as typed: spaces can be part of a password.
+    const password = document.getElementById(passwordId).value;
 
     if (!username || !password) {
-        alert('Please fill in both username and password fields.');
-        return;
+        setMessage(form, 'Please fill in both username and password.');
+        return null;
     }
 
-    const data = {
-        username: username,
-        password: password
-    };
-
-    fetch('/save-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(result => {
-        console.log('Success:', result);
-        alert('Registration successful! Please log in.');
-        document.getElementById('registerForm').classList.add('hidden');
-        document.getElementById('loginForm').classList.remove('hidden');
-    })
-    .catch(error => {
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        const result = await response.json().catch(() => ({}));
+        return { ok: response.ok, message: result.message || 'Something went wrong. Please try again.' };
+    } catch (error) {
         console.error('Error:', error);
-        alert('Error during registration. Please try again.');
-    });
+        return { ok: false, message: 'Could not reach the server. Is it running?' };
+    } finally {
+        button.disabled = false;
+    }
+}
+
+registerForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const result = await submitCredentials('/register', registerForm, 'regUsername', 'regPassword');
+    if (!result) return;
+    if (!result.ok) {
+        setMessage(registerForm, result.message);
+        return;
+    }
+    registerForm.reset();
+    showForm(loginForm, registerForm);
+    setMessage(loginForm, result.message, 'success');
 });
 
-// Handle login form submission
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
-
-    if (!username || !password) {
-        alert('Please fill in both username and password fields.');
+    const result = await submitCredentials('/login', loginForm, 'loginUsername', 'loginPassword');
+    if (!result) return;
+    if (!result.ok) {
+        setMessage(loginForm, result.message);
         return;
     }
-
-    const data = {
-        username: username,
-        password: password
-    };
-
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(result => {
-        console.log('Success:', result);
-        // Redirect to the dashboard page
-        window.location.href = '/dashboard.html';
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Invalid username or password. Please try again.');
-    });
+    window.location.href = '/dashboard';
 });

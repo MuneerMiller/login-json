@@ -88,3 +88,28 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.message {
+    min-height: 1.2em;
+    margin: 0;
+    font-size: 14px;
+}
+
+.message.error {
+    color: #c0392b;
+}
+
+.message.success {
+    color: #1e7e34;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+}
